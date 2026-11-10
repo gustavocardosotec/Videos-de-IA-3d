@@ -1,0 +1,87 @@
+MAPA DO REPOSITORIO: gustavocardosotec/Videos-de-IA-3d
+(Pack de Videos 3D Explicativos - low-poly, vertical 1080x1920, 30fps)
+
+COMO O PACK FUNCIONA (resumo)
+- Nao e uma biblioteca de modelos soltos. E um MOTOR que le um arquivo de dados
+  (storyboard.json) e renderiza o video sozinho, usando navegador + ffmpeg.
+- A IA NAO escreve codigo 3D. Ela so escreve: narracao.txt e storyboard.json.
+- Fluxo: ideia > roteiro > voz (+tempo por palavra) > storyboard.json > validar >
+  quadros (conferir) > render do video > capa.
+- Requisitos para renderizar: Node.js 18+, ffmpeg, Chrome/Edge/Brave.
+  (Precisa de um agente que rode comandos, ex.: Claude Code. Chat comum NAO roda.)
+
+======================================================================
+RAIZ
+======================================================================
+AGENTE.md    Instrucoes completas para a IA (163 linhas). Fluxo em 12 etapas,
+             regras de roteiro, regras de storyboard, checklist de quadros,
+             falhas comuns, comandos. E o arquivo mais pesado: leia so se precisar.
+AGENTS.md    Mesmo papel do AGENTE.md, no nome que o Codex procura.
+CLAUDE.md    Mesmo papel, no nome que o Claude Code procura.
+PROMPT.md    Prompt pronto para colar no agente (pasta, ideia, duracao, voz).
+README.md    Explicacao para humanos: como usar em 3 passos, comandos.
+package.json Dependencias e comandos npm (voz, novo, validar, render, preview,
+             check, empacotar, catalog).
+
+======================================================================
+PASTAS
+======================================================================
+assets/      Os modelos em codigo. 11 personagens (mesmo esqueleto), 20 animacoes,
+             57 itens de cenario (casas, predios, ruas, veiculos, obras, maquinas
+             animadas, formas livres, tubos...).
+             Conhecidos: assets/characters/presets.js (personagens)
+                         assets/scenery/props.js (cenario; padrao register(...))
+             NAO ABRIR. A IA nao precisa ler o codigo, so usar o NOME no storyboard.
+catalog/     Catalogo dos assets para a IA.
+             RESUMO.md  -> LER PRIMEIRO. Personagens, animacoes e cenario em 1 pagina.
+             CATALOG.md -> detalhes (parametros, alturas de piso). So se precisar.
+config/      canal.json (identidade do canal, criado na 1a vez) e
+             voz.json (voz escolhida).
+docs/        Guias de referencia:
+             storyboard.md    formato do storyboard.json (camera, textos, movimentos)
+             roteiro-viral.md como escrever roteiro que prende
+             processos.md     como animar qualquer processo (OBRIGATORIO)
+             voz.md           voz gratis (Kokoro+Whisper) ou paga (ElevenLabs)
+             postagem.md      capa, titulo, descricao, comentario fixado
+engine/      Motor que desenha cada quadro e gera o MP4. NAO MEXER.
+tools/       Comandos: render.mjs (quadros/previa/video/capa), validar.mjs,
+             voz.mjs (diagnostico, voz, tempo por palavra), novo-projeto.mjs.
+templates/   Modelos: canal.exemplo.json, ideia, storyboard.
+projects/    Um video por pasta. Cada uma tem: ideia.md, narracao.txt,
+             plano-animacao.md, storyboard.json, audio, render/.
+             Exemplos: projects/exemplo-casa/ e projects/exemplo-asfalto/
+             (o do asfalto, 120s, e o padrao de qualidade).
+preview/     Paginas para VER personagens, animacoes e cenario no navegador
+             (npm run preview > http://localhost:5173).
+
+======================================================================
+COMANDOS
+======================================================================
+npm install
+node tools/novo-projeto.mjs "Titulo"
+node tools/voz.mjs gerar projects/<nome>
+node tools/validar.mjs projects/<nome>
+node tools/render.mjs projects/<nome> --quadros   (conferir cena por cena)
+node tools/render.mjs projects/<nome> --previa    (540x960 rapido)
+node tools/render.mjs projects/<nome>             (final 1080x1920)
+
+======================================================================
+REGRAS DO MOTOR QUE IMPORTAM PARA ECONOMIZAR
+======================================================================
+- Ler catalog/RESUMO.md UMA vez; nunca ler o codigo dos assets.
+- Nunca escrever codigo proprio de render/animacao/HTML: so storyboard.json.
+- Cada cena: 3-5 s, minimo 2 tipos de animacao (movimento, fluxo, transformacao,
+  maquina, acao do personagem). Camera girando e boneco falando NAO contam.
+- Sempre ter ambiente.fundo real (campo, cidade, floresta, deserto, litoral,
+  industrial, interior). Nunca cor solida.
+- duracao do video = duracao do audio + 0,5 s.
+- Limitacao: nao existe interior de casa, elevador, metro. Compor com forma,
+  tubo, fluxos e anim.
+
+======================================================================
+NAO VERIFICADO (nao consegui abrir as subpastas)
+======================================================================
+O GitHub bloqueia acesso automatico as paginas de pasta. Por isso a lista exata
+de arquivos dentro de assets/, catalog/, engine/ etc. NAO esta aqui. O que esta
+acima vem do README.md e do AGENTE.md. Para saber os NOMES dos assets (poste,
+medidor, disjuntor, quadro, chuveiro...), cole aqui o conteudo de catalog/RESUMO.md.
